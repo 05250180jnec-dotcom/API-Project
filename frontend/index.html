@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SYD204 Task Manager</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Task Manager</h1>
+      <p>Connected to Aiven MySQL</p>
+    </header>
+
+    <form id="task-form">
+      <input type="text" id="task-input" placeholder="What needs to be done?" required autocomplete="off">
+      <button type="submit">Add Task</button>
+    </form>
+
+    <div id="error-message" class="error hidden"></div>
+    <div id="loading" class="loading hidden">Loading tasks...</div>
+
+    <ul id="task-list"></ul>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
