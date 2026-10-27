@@ -1,29 +1,197 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SYD204 Task Manager</title>
-  <link rel="stylesheet" href="/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYD204 | Task Manager</title>
+
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <script src="/app.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Task Manager</h1>
-      <p>Connected to Aiven MySQL</p>
-    </header>
+<div class="app">
 
-    <form id="task-form">
-      <input type="text" id="task-input" placeholder="What needs to be done?" required autocomplete="off">
-      <button type="submit">Add Task</button>
-    </form>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon"><i class="fa-solid fa-square-check"></i></div>
+            <div><h2>Task Manager</h2><span>SYD204</span></div>
+        </div>
 
-    <div id="error-message" class="error hidden"></div>
-    <div id="loading" class="loading hidden">Loading tasks...</div>
+        <nav class="navigation">
+            <a class="nav-link active" href="#home">
+                <i class="fa-solid fa-house"></i> Home
+            </a>
+            <a class="nav-link" href="#tasks">
+                <i class="fa-solid fa-list-check"></i> Tasks
+            </a>
+            <a class="nav-link" href="#tips">
+                <i class="fa-solid fa-lightbulb"></i> Quick Tips
+            </a>
+        </nav>
 
-    <ul id="task-list"></ul>
-  </div>
+        <div class="sidebar-bottom">
+            <div class="db-status">
+                <span class="status-dot"></span>
+                <div>
+                    <strong>Database</strong>
+                    <span> Aiven MySQL</span>
+                </div>
+            </div>
+            <p>Built with ❤️ for SYD204</p>
+            <small>Node.js · Express · MySQL</small>
+        </div>
+    </aside>
 
-  <script src="/app.js"></script>
+    <!-- Main area -->
+    <main class="main-area" id="home">
+
+        <section class="welcome-banner">
+            <div class="welcome-copy">
+                <span class="eyebrow">YOUR PERSONAL WORKSPACE</span>
+                <h1>Good evening! <span>👋</span></h1>
+                <p>Stay focused, stay productive. Manage your tasks efficiently.</p>
+            </div>
+            <div class="date-pill">
+                <i class="fa-regular fa-calendar"></i>
+                <span id="current-date">Today</span>
+            </div>
+        </section>
+
+        <div class="dashboard">
+
+            <!-- Main column -->
+            <div class="primary-column">
+
+                <section class="stats-grid" aria-label="Task summary">
+                    <article class="stat-card total-card">
+                        <div class="stat-icon"><i class="fa-solid fa-list-check"></i></div>
+                        <div><p>Total Tasks</p><h2 id="total-tasks">0</h2></div>
+                    </article>
+
+                    <article class="stat-card completed-card">
+                        <div class="stat-icon"><i class="fa-solid fa-check"></i></div>
+                        <div><p>Completed</p><h2 id="completed-tasks">0</h2></div>
+                    </article>
+
+                    <article class="stat-card pending-card">
+                        <div class="stat-icon"><i class="fa-regular fa-clock"></i></div>
+                        <div><p>Pending</p><h2 id="pending-tasks">0</h2></div>
+                    </article>
+                </section>
+
+                <!-- Add task -->
+                <section class="panel" id="add-task">
+                    <div class="panel-heading">
+                        <div class="heading-icon"><i class="fa-solid fa-plus"></i></div>
+                        <div>
+                            <h2>Add a New Task</h2>
+                            <p>Enter a task below to add it to your list.</p>
+                        </div>
+                    </div>
+
+                    <form id="task-form">
+                        <label class="input-wrap" for="task-input">
+                            <i class="fa-solid fa-pen"></i>
+                            <input type="text" id="task-input"
+                                   placeholder="What needs to be done?"
+                                   maxlength="255" required autocomplete="off">
+                        </label>
+                        <button type="submit" class="primary-btn" id="add-button">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Add Task</span>
+                        </button>
+                    </form>
+
+                    <div id="error-message" class="error hidden" role="alert"></div>
+                    <div id="loading" class="loading hidden" aria-live="polite">
+                        <span class="spinner"></span> Loading tasks...
+                    </div>
+                </section>
+
+                <!-- Task list -->
+                <section class="panel task-panel" id="tasks">
+                    <div class="task-toolbar">
+                        <div class="panel-heading">
+                            <div class="heading-icon list-icon">
+                                <i class="fa-solid fa-list-ul"></i>
+                            </div>
+                            <div>
+                                <h2>Your Tasks</h2>
+                                <p>All your tasks in one place.</p>
+                            </div>
+                        </div>
+
+                        <div class="filters">
+                            <label class="search-box">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input id="task-search" type="search"
+                                       placeholder="Search tasks..." aria-label="Search tasks">
+                            </label>
+                            <select id="task-filter" aria-label="Filter tasks">
+                                <option value="all">All</option>
+                                <option value="pending">Pending</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <ul id="task-list"></ul>
+                </section>
+            </div>
+
+            <!-- Right column -->
+            <aside class="right-column">
+
+                <section class="motivation-card">
+                    <div class="mountain-symbol"><i class="fa-solid fa-mountain-sun"></i></div>
+                    <h2>Small steps<br>make big progress</h2>
+                    <p>Keep going! Every task you complete brings you closer to your goals.</p>
+                    <div class="plant-decoration">✦</div>
+                </section>
+
+                <section class="panel side-stats">
+                    <h2><i class="fa-solid fa-chart-simple"></i> Task Statistics</h2>
+
+                    <div class="side-stat">
+                        <span class="mini-icon blue"><i class="fa-solid fa-list-check"></i></span>
+                        <span>Total Tasks</span>
+                        <strong id="side-total">0</strong>
+                    </div>
+                    <div class="side-stat">
+                        <span class="mini-icon green"><i class="fa-solid fa-check"></i></span>
+                        <span>Completed</span>
+                        <strong id="side-completed">0</strong>
+                    </div>
+                    <div class="side-stat">
+                        <span class="mini-icon orange"><i class="fa-regular fa-clock"></i></span>
+                        <span>Pending</span>
+                        <strong id="side-pending">0</strong>
+                    </div>
+                </section>
+
+                <section class="panel tips-panel" id="tips">
+                    <h2><i class="fa-solid fa-lightbulb"></i> Quick Tips</h2>
+                    <ul>
+                        <li>Break large tasks into smaller steps.</li>
+                        <li>Focus on one task at a time.</li>
+                        <li>Keep your task list updated.</li>
+                    </ul>
+                    <div class="encouragement">You got this! ☺</div>
+                </section>
+
+            </aside>
+        </div>
+
+        <footer class="footer">
+            <span>SYD204 Task Manager</span>
+            <span>Organize your day, one task at a time.</span>
+        </footer>
+    </main>
+</div>
 </body>
 </html>
